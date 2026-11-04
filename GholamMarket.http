@@ -1,0 +1,6 @@
+@GholamMarket_HostAddress = http://localhost:5271
+
+GET {{GholamMarket_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

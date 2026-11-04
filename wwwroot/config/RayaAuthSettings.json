@@ -1,0 +1,23 @@
+{
+  "ConnectionStrings": {
+    "RayaAuthConnection": "Server=.;Database=RayaAuthDb;User Id=sa;Password=1qaz!QAZ;"
+    //"RayaAuthConnection": "Server=78.109.201.43,1433;Database=Pinex;User Id=sa;Password=Saeed123!@#;TrustServerCertificate=True;Connection Timeout=30;"
+  },
+
+  "RayaAuthAppSettings": {
+    "KavehNegar": {
+      "APIKey": "",
+      "BaseURL": "",
+      "Lookup": "",
+      "LifeTimeMin": 5,
+      "VerifyTemplateName": ""
+    },
+    "JWT": {
+      "ValidAudience": "RayaAuth",
+      "ValidIssuer": "GholamMarket.WebApi",
+      "Secret": "ed13frgyY+5OrjPMGYUhqgp9n4ctBkmrzHXM5jJJhvu3ERp/vYtpRZ1zQIQtE7YNFfph1kKKmrznmXvnvUPHrQ==",
+      "TokenValidityInHours": 2,
+      "RefreshTokenValidityInHours": 12
+    }
+  }
+}

@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Framework/">
+    <Project Path="../NibFramework/NibFramework/NibFramework.csproj" />
+    <Project Path="../NibFramework/Raya.Auth/Raya.Auth.csproj" />
+  </Folder>
+  <Project Path="../Application/Application.csproj" />
+  <Project Path="../Domain/Domain.csproj" />
+  <Project Path="../Infrastucture/Infrastucture.csproj" />
+  <Project Path="GholamMarket.csproj" />
+</Solution>
