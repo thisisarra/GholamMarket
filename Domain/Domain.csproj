@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\NibFramework\NibFramework\NibFramework.csproj" />
+    <ProjectReference Include="..\..\NibFramework\Raya.Auth\Raya.Auth.csproj" />
+  </ItemGroup>
+
 </Project>
