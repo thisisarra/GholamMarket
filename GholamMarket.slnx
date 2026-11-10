@@ -1,12 +1,12 @@
 <Solution>
   <Folder Name="/Frameworks/">
-    <Project Path="../../NibFramework/NibFramework/NibFramework.csproj" />
-    <Project Path="../../NibFramework/Raya.Auth/Raya.Auth.csproj" />
+    <Project Path="../NibFramework/NibFramework/NibFramework.csproj" />
+    <Project Path="../NibFramework/Raya.Auth/Raya.Auth.csproj" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="../Application/Application.csproj" Id="9fade105-80bf-4b7e-b448-0f164d13310a" />
-    <Project Path="../Domain/Domain.csproj" Id="88d6aebf-0c2b-4979-afc7-548638a31a63" />
-    <Project Path="../Infrastructure/Infrastructure.csproj" Id="af01eb15-dc0e-4466-a386-59437164e391" />
-    <Project Path="GholamMarket.csproj" />
+    <Project Path="Application/Application.csproj" Id="d1da98f1-e6ce-4f8b-867d-627024cd674e" />
+    <Project Path="Domain/Domain.csproj" Id="68da1ea6-fa3c-4d6f-9a05-fa2e6635c251" />
+    <Project Path="GholamMarket/GholamMarket.csproj" />
+    <Project Path="Infrastructure/Infrastructure.csproj" Id="00469da1-4b96-459b-94ce-0f88f43418dc" />
   </Folder>
 </Solution>
