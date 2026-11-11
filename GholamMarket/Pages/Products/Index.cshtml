@@ -1,0 +1,39 @@
+@page
+@model GholamMarket.Pages.Products.IndexModel
+@{
+    ViewData["Title"] = "کالاها";
+    ViewData["PageCount"] = Model.Listing.Page.PageCount;
+    var title = string.IsNullOrWhiteSpace(Model.Listing.Search) ? "کالاها" : $"نتیجه جستجو: {Model.Listing.Search}";
+}
+
+<div class="page-head">
+    <h1>@title</h1>
+    <p>@Model.Listing.Page.Total کالا</p>
+</div>
+
+<div class="category-rail" aria-label="دسته‌بندی‌ها">
+    <a class="category-chip @(string.IsNullOrWhiteSpace(Model.Listing.CategorySlug) ? "active" : null)" asp-page="/Products/Index" asp-route-search="@Model.Listing.Search">همه</a>
+    @foreach (var category in Model.Listing.Categories)
+    {
+        <a class="category-chip @(category.Slug == Model.Listing.CategorySlug ? "active" : null)" asp-page="/Products/Index" asp-route-category="@category.Slug" asp-route-search="@Model.Listing.Search">@category.Name</a>
+    }
+</div>
+
+@if (Model.Listing.Page.Items.Count == 0)
+{
+    <div class="surface empty-state">
+        <i class="bi bi-search"></i>
+        کالایی با این مشخصات پیدا نشد.
+        <div class="mt-3"><a class="btn btn-brand" asp-page="/Products/Index">نمایش همه کالاها</a></div>
+    </div>
+}
+else
+{
+    <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 g-3">
+        @foreach (var product in Model.Listing.Page.Items)
+        {
+            <partial name="_ProductCard" model="product" />
+        }
+    </div>
+    <partial name="_Pager" model="Model.Listing.Page.Page" />
+}

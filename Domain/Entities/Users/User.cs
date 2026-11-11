@@ -1,9 +1,21 @@
-﻿using Raya.Auth.Entities.Account;
+﻿using Domain.Entities.Customers;
+using Pinex.Domain.Entities.Users;
+using Raya.Auth.Entities.Account;
 
 namespace Domain.Entities.Users;
 
 public class User : RayaAuthUser
 {
+    /// <summary>
+    /// نام
+    /// </summary>
+    public string? FirstName { get; set; }
+
+    /// <summary>
+    /// نام خانوادگی
+    /// </summary>
+    public string? LastName { get; set; }
+
     /// <summary>
     /// وضعیت
     /// </summary>
@@ -15,6 +27,8 @@ public class User : RayaAuthUser
     public DateTime? LastLoginAt { get; set; }
 
     #region Relations
+    public virtual Customer? Customer { get; set; }
+
     public virtual ICollection<UserRole> UserRoles { get; set; }
         = new List<UserRole>();
     #endregion

@@ -1,0 +1,47 @@
+@page
+@model GholamMarket.Pages.Account.RegisterModel
+@{
+    ViewData["Title"] = "ثبت‌نام";
+}
+
+<div class="auth-layout">
+    <form class="surface auth-card" method="post">
+        <h2 class="h4 mb-3">ثبت‌نام</h2>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">نام</label>
+                <input class="form-control" asp-for="Input.FirstName" />
+                <span class="field-error" asp-validation-for="Input.FirstName"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">نام خانوادگی</label>
+                <input class="form-control" asp-for="Input.LastName" />
+                <span class="field-error" asp-validation-for="Input.LastName"></span>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">ایمیل</label>
+            <input class="form-control" asp-for="Input.Email" />
+            <span class="field-error" asp-validation-for="Input.Email"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">موبایل</label>
+            <input class="form-control" asp-for="Input.Phone" />
+            <span class="field-error" asp-validation-for="Input.Phone"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">رمز عبور</label>
+            <input class="form-control" asp-for="Input.Password" type="password" />
+            <div class="form-text">حداقل ۶ کاراکتر، شامل حرف بزرگ و کوچک انگلیسی، عدد و یک نماد مثل @@.</div>
+            <span class="field-error" asp-validation-for="Input.Password"></span>
+        </div>
+        <button class="btn btn-brand w-100" type="submit">ثبت‌نام</button>
+        <p class="mt-3 mb-0">حساب دارید؟ <a asp-page="/Account/Login">ورود</a></p>
+    </form>
+    <aside class="auth-aside">
+        <h1 class="h3">ساخت حساب</h1>
+        <p>با یک حساب می‌توانید سفارش ثبت کنید، آدرس ذخیره کنید و وضعیت ارسال را ببینید.</p>
+    </aside>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

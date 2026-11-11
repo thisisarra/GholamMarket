@@ -1,0 +1,50 @@
+@page "{id}"
+@model GholamMarket.Areas.Admin.Pages.Users.DetailsModel
+@{
+    var account = Model.Account!;
+    ViewData["Title"] = account.Name;
+}
+
+<div class="d-flex justify-content-between align-items-start mb-3">
+    <div>
+        <h1 class="h4">@account.Name</h1>
+        <div>@account.Email</div>
+        <div>@account.Phone</div>
+        <div>نقش: @(account.IsAdmin ? "مدیر" : "کاربر") | @(account.IsActive ? "فعال" : "غیرفعال")</div>
+    </div>
+    <div class="d-flex gap-2">
+        <form method="post" asp-page-handler="Active">
+            <input type="hidden" name="active" value="@((!account.IsActive).ToString().ToLowerInvariant())" />
+            <button class="btn btn-outline-secondary" type="submit">@(account.IsActive ? "غیرفعال کردن" : "فعال کردن")</button>
+        </form>
+        <form method="post" asp-page-handler="Role">
+            <input type="hidden" name="admin" value="@((!account.IsAdmin).ToString().ToLowerInvariant())" />
+            <button class="btn btn-outline-dark" type="submit">@(account.IsAdmin ? "گرفتن نقش مدیر" : "دادن نقش مدیر")</button>
+        </form>
+    </div>
+</div>
+<div class="panel-card p-3">
+    <h2 class="h5">سفارش‌های کاربر</h2>
+    @if (account.Orders.Count == 0)
+    {
+        <div class="empty-state">سفارشی ندارد.</div>
+    }
+    else
+    {
+        <table class="table">
+            <thead><tr><th>شماره</th><th>تاریخ</th><th>مبلغ</th><th>وضعیت</th><th></th></tr></thead>
+            <tbody>
+            @foreach (var order in account.Orders)
+            {
+                <tr>
+                    <td>@order.OrderNumber</td>
+                    <td>@ShopFormat.When(order.CreatedAt)</td>
+                    <td>@ShopFormat.Money(order.TotalAmount)</td>
+                    <td>@ShopFormat.OrderStatus(order.Status)</td>
+                    <td><a asp-page="/Orders/Details" asp-route-id="@order.Id">جزئیات</a></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>

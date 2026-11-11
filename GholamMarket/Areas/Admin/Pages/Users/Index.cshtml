@@ -1,0 +1,32 @@
+@page
+@model GholamMarket.Areas.Admin.Pages.Users.IndexModel
+@{
+    ViewData["Title"] = "کاربران";
+    ViewData["PageCount"] = Model.PageData.PageCount;
+}
+
+<h1 class="h3">کاربران</h1>
+<form class="row g-2 mb-3" method="get">
+    <div class="col-md-6"><input class="form-control" name="search" value="@Model.Search" placeholder="نام، ایمیل یا موبایل" /></div>
+    <div class="col-md-2"><button class="btn btn-outline-secondary" type="submit">جستجو</button></div>
+</form>
+<div class="panel-card p-3 table-responsive">
+    <table class="table">
+        <thead><tr><th>نام</th><th>ایمیل</th><th>موبایل</th><th>نقش</th><th>وضعیت</th><th>سفارش</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var user in Model.PageData.Items)
+        {
+            <tr>
+                <td>@user.Name</td>
+                <td>@user.Email</td>
+                <td>@user.Phone</td>
+                <td>@(user.IsAdmin ? "مدیر" : "کاربر")</td>
+                <td>@(user.IsActive ? "فعال" : "غیرفعال")</td>
+                <td>@user.OrderCount</td>
+                <td><a asp-page="Details" asp-route-id="@user.Id">جزئیات</a></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <partial name="_Pager" model="Model.PageData.Page" />
+</div>

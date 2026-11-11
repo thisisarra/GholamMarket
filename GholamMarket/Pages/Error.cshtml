@@ -1,0 +1,15 @@
+@page
+@model ErrorModel
+@{
+    ViewData["Title"] = "خطا";
+}
+
+<div class="surface empty-state">
+    <h1 class="h3">مشکلی در انجام درخواست پیش آمد</h1>
+    <p>جزئیات فنی نمایش داده نمی‌شود. لطفا کمی بعد دوباره تلاش کنید.</p>
+    @if (Model.ShowRequestId)
+    {
+        <p class="small">شناسه پیگیری: @Model.RequestId</p>
+    }
+    <a class="btn btn-brand" asp-page="/Index">بازگشت به خانه</a>
+</div>

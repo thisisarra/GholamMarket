@@ -1,0 +1,54 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "پیشخوان مدیریت";
+    var data = Model.Dashboard;
+}
+
+<h1 class="h3 mb-3">پیشخوان</h1>
+@if (data is not null)
+{
+    <div class="row g-3 mb-4">
+        @foreach (var item in new (string Label, string Value)[]
+        {
+            ("کاربران", data.Users.ToString()),
+            ("کالاها", data.Products.ToString()),
+            ("کالاهای فعال", data.ActiveProducts.ToString()),
+            ("سفارش‌ها", data.Orders.ToString()),
+            ("منتظر پرداخت", data.PendingPayment.ToString()),
+            ("پرداخت‌شده", data.Paid.ToString()),
+            ("در حال پردازش", data.Processing.ToString()),
+            ("تحویل‌شده", data.Completed.ToString()),
+            ("فروش", ShopFormat.Money(data.Sales))
+        })
+        {
+            <div class="col-6 col-md-4 col-xl-3">
+                <div class="stat-card p-3">
+                    <div class="text-secondary">@item.Label</div>
+                    <div class="stat-value">@item.Value</div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="panel-card p-3">
+        <h2 class="h5">آخرین سفارش‌ها</h2>
+        <div class="table-responsive">
+            <table class="table">
+                <thead><tr><th>شماره</th><th>مشتری</th><th>تاریخ</th><th>مبلغ</th><th>وضعیت</th><th></th></tr></thead>
+                <tbody>
+                @foreach (var order in data.LatestOrders)
+                {
+                    <tr>
+                        <td>@order.OrderNumber</td>
+                        <td>@order.CustomerName</td>
+                        <td>@ShopFormat.When(order.CreatedAt)</td>
+                        <td>@ShopFormat.Money(order.TotalAmount)</td>
+                        <td><span class="badge @ShopFormat.Badge(order.Status)">@ShopFormat.OrderStatus(order.Status)</span></td>
+                        <td><a asp-page="/Orders/Details" asp-route-id="@order.Id">جزئیات</a></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

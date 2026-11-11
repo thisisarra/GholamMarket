@@ -1,0 +1,38 @@
+@page "{id:int?}"
+@model GholamMarket.Areas.Admin.Pages.Products.EditModel
+@{
+    ViewData["Title"] = Model.Input.Id is null ? "کالای جدید" : "ویرایش کالا";
+}
+
+<form class="panel-card p-4" method="post" enctype="multipart/form-data">
+    <h1 class="h4 mb-3">@ViewData["Title"]</h1>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Input.Id" />
+    <div class="row">
+        <div class="col-md-6 mb-3"><label class="form-label">نام</label><input class="form-control" asp-for="Input.Name" /><span class="text-danger" asp-validation-for="Input.Name"></span></div>
+        <div class="col-md-6 mb-3"><label class="form-label">نامک</label><input class="form-control" asp-for="Input.Slug" /></div>
+        <div class="col-md-4 mb-3"><label class="form-label">قیمت (تومان)</label><input class="form-control" asp-for="Input.Price" /><span class="text-danger" asp-validation-for="Input.Price"></span></div>
+        <div class="col-md-4 mb-3"><label class="form-label">تخفیف درصد</label><input class="form-control" asp-for="Input.DiscountPercent" /><span class="text-danger" asp-validation-for="Input.DiscountPercent"></span></div>
+        <div class="col-md-4 mb-3"><label class="form-label">موجودی</label><input class="form-control" asp-for="Input.Stock" /><span class="text-danger" asp-validation-for="Input.Stock"></span></div>
+        <div class="col-md-6 mb-3"><label class="form-label">کد کالا</label><input class="form-control" asp-for="Input.Sku" /></div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">دسته‌بندی</label>
+            <select class="form-select" asp-for="Input.CategoryId">
+                @foreach (var category in Model.Categories)
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="mb-3"><label class="form-label">توضیحات</label><textarea class="form-control" asp-for="Input.Description" rows="4"></textarea></div>
+    <div class="mb-3"><label class="form-label">آدرس تصویر</label><input class="form-control" asp-for="Input.ImageUrl" /></div>
+    <div class="mb-3"><label class="form-label">بارگذاری تصویر</label><input class="form-control" type="file" name="image" accept=".jpg,.jpeg,.png,.webp" /></div>
+    <div class="form-check mb-3">
+        <input class="form-check-input" asp-for="Input.IsActive" />
+        <label class="form-check-label">کالا فعال باشد</label>
+    </div>
+    <button class="btn btn-brand" type="submit">ذخیره</button>
+    <a class="btn btn-link" asp-page="Index">بازگشت</a>
+</form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

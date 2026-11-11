@@ -1,0 +1,58 @@
+@page
+@model GholamMarket.Pages.Checkout.IndexModel
+@{
+    ViewData["Title"] = "تسویه حساب";
+    var checkout = Model.Checkout!;
+}
+
+<div class="page-head">
+    <h1>تسویه حساب</h1>
+    <p>آدرس و کد تخفیف را بررسی کنید. مبلغ نهایی روی سرور محاسبه می‌شود.</p>
+</div>
+<form method="post" class="row g-4">
+    <div class="col-lg-7">
+        <section class="surface p-3 p-md-4 mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h5 mb-0">آدرس تحویل</h2>
+                <a asp-page="/Account/Addresses">مدیریت آدرس‌ها</a>
+            </div>
+            @if (checkout.Addresses.Count == 0)
+            {
+                <div class="alert alert-warning mb-0">برای ثبت سفارش ابتدا یک آدرس ذخیره کنید.</div>
+            }
+            @foreach (var address in checkout.Addresses)
+            {
+                <label class="address-option">
+                    <input type="radio" name="AddressId" value="@address.Id" @(address.Id == Model.AddressId ? "checked" : null) />
+                    <strong>@address.Title</strong>
+                    <div>@address.ReceiverName — @address.ReceiverPhone</div>
+                    <div class="text-secondary">@address.Province، @address.City، @address.Street</div>
+                </label>
+            }
+        </section>
+        <section class="surface p-3 p-md-4">
+            <label class="form-label" asp-for="CouponCode">کد تخفیف</label>
+            <input class="form-control mb-3" asp-for="CouponCode" />
+            <label class="form-label" asp-for="Note">یادداشت سفارش</label>
+            <textarea class="form-control" asp-for="Note" rows="3"></textarea>
+        </section>
+    </div>
+    <div class="col-lg-5">
+        <aside class="surface summary-card">
+            <h2 class="h6">صورتحساب</h2>
+            @foreach (var line in checkout.Cart.Lines)
+            {
+                <div class="summary-row">
+                    <span>@line.Name × @line.Quantity</span>
+                    <span>@ShopFormat.Money(line.LineTotal)</span>
+                </div>
+            }
+            <hr />
+            <div class="summary-row"><span>جمع کالا</span><span>@ShopFormat.Money(checkout.Cart.Subtotal)</span></div>
+            <div class="summary-row"><span>هزینه ارسال</span><span>@(checkout.Shipping == 0 ? "رایگان" : ShopFormat.Money(checkout.Shipping))</span></div>
+            <div class="summary-row summary-total"><span>قابل پرداخت</span><span>@ShopFormat.Money(checkout.Total)</span></div>
+            <p class="form-text">اگر کد تخفیف معتبر باشد، از همین مبلغ کم می‌شود.</p>
+            <button class="btn btn-brand w-100" type="submit" @(checkout.Addresses.Count == 0 ? "disabled" : null)>ثبت سفارش و پرداخت</button>
+        </aside>
+    </div>
+</form>

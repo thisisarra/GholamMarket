@@ -1,4 +1,6 @@
-﻿namespace Pinex.Domain.Entities.Users;
+﻿using Domain.Entities.Users;
+
+namespace Pinex.Domain.Entities.Users;
 
 public class RolePermission
 {

@@ -1,0 +1,22 @@
+@page
+@model GholamMarket.Pages.Checkout.ResultModel
+@using Domain.Entities.Sales
+@{
+    var order = Model.Order!;
+    ViewData["Title"] = "نتیجه پرداخت";
+    var paid = order.PaymentStatus == PaymentStatus.Succeeded;
+}
+
+<section class="surface empty-state">
+    <i class="bi @(paid ? "bi-check-circle text-success" : "bi-x-circle text-danger")"></i>
+    <h1 class="h3">@(paid ? "پرداخت تایید شد" : "پرداخت کامل نشده است")</h1>
+    <p>سفارش @order.OrderNumber به مبلغ @ShopFormat.Money(order.TotalAmount)</p>
+    <p>وضعیت سفارش: @ShopFormat.OrderStatus(order.Status) | پرداخت: @ShopFormat.PaymentStatus(order.PaymentStatus)</p>
+    <div class="d-flex justify-content-center gap-2 flex-wrap">
+        <a class="btn btn-brand" asp-page="/Account/Orders/Details" asp-route-id="@order.Id">پیگیری سفارش</a>
+        @if (order.Status == OrderStatus.Pending)
+        {
+            <a class="btn btn-outline-brand" asp-page="/Checkout/Pay" asp-route-orderId="@order.Id">تلاش دوباره</a>
+        }
+    </div>
+</section>

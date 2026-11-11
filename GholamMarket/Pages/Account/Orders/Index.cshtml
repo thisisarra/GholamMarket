@@ -1,0 +1,18 @@
+@page
+@model GholamMarket.Pages.Account.Orders.IndexModel
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "سفارش‌های من";
+}
+
+<h1 class="h3 mb-3">سفارش‌های من</h1>
+@if (Model.Orders.Count == 0)
+{
+    <div class="surface empty-state">سفارشی ثبت نشده است.</div>
+}
+else
+{
+    <div class="surface p-3">
+        <partial name="_OrderTable" model="Model.Orders" />
+    </div>
+}

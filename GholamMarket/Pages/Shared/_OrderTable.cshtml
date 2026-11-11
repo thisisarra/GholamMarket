@@ -1,0 +1,28 @@
+@model IReadOnlyList<OrderSummaryDto>
+<div class="table-responsive">
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>شماره</th>
+                <th>تاریخ</th>
+                <th>مبلغ</th>
+                <th>وضعیت</th>
+                <th>پرداخت</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.OrderNumber</td>
+                    <td>@ShopFormat.When(order.CreatedAt)</td>
+                    <td>@ShopFormat.Money(order.TotalAmount)</td>
+                    <td><span class="badge @ShopFormat.Badge(order.Status)">@ShopFormat.OrderStatus(order.Status)</span></td>
+                    <td>@ShopFormat.PaymentStatus(order.PaymentStatus)</td>
+                    <td><a asp-page="/Account/Orders/Details" asp-route-id="@order.Id">جزئیات</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

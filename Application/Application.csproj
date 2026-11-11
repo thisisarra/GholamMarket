@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\..\NibFramework\NibFramework\NibFramework.csproj" />
   </ItemGroup>
+
 
 </Project>

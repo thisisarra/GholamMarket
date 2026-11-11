@@ -1,0 +1,32 @@
+@page
+@model GholamMarket.Pages.Checkout.PayModel
+@using Domain.Entities.Sales
+@{
+    ViewData["Title"] = "پرداخت";
+    var payment = Model.Payment!;
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <section class="surface p-4 text-center">
+            <i class="bi bi-credit-card fs-1 text-success"></i>
+            <h1 class="h4 mt-2">درگاه پرداخت آزمایشی</h1>
+            <p class="mb-1">سفارش @payment.OrderNumber</p>
+            <p class="price fs-3">@ShopFormat.Money(payment.Amount)</p>
+            <p>وضعیت فعلی: @ShopFormat.PaymentStatus(payment.Status)</p>
+            @if (payment.Status == PaymentStatus.Pending && payment.PaymentId > 0)
+            {
+                <p class="text-secondary">این شبیه‌ساز فقط برای توسعه است. مبلغ سفارش روی سرور بررسی می‌شود و بدون تایید، سفارش پرداخت‌شده نمی‌شود.</p>
+                <form method="post" class="d-flex justify-content-center gap-2">
+                    <input type="hidden" name="paymentId" value="@payment.PaymentId" />
+                    <button class="btn btn-brand" name="approved" value="true" type="submit">پرداخت موفق</button>
+                    <button class="btn btn-outline-danger" name="approved" value="false" type="submit">انصراف</button>
+                </form>
+            }
+            else
+            {
+                <a class="btn btn-brand" asp-page="/Checkout/Result" asp-route-orderId="@payment.OrderId">مشاهده نتیجه</a>
+            }
+        </section>
+    </div>
+</div>

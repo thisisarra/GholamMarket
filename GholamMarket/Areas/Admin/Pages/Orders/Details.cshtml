@@ -1,0 +1,68 @@
+@page "{id:int}"
+@model GholamMarket.Areas.Admin.Pages.Orders.DetailsModel
+@using Domain.Entities.Sales
+@{
+    var order = Model.Order!;
+    ViewData["Title"] = order.OrderNumber;
+    var next = ShopFormat.NextStatuses(order.Status);
+}
+
+<div class="d-flex justify-content-between mb-3">
+    <h1 class="h4">سفارش @order.OrderNumber</h1>
+    <span class="badge @ShopFormat.Badge(order.Status)">@ShopFormat.OrderStatus(order.Status)</span>
+</div>
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="panel-card p-3">
+            <table class="table">
+                <thead><tr><th>کالا</th><th>کد</th><th>تعداد</th><th>قیمت</th><th>جمع</th></tr></thead>
+                <tbody>
+                @foreach (var line in order.Lines)
+                {
+                    <tr>
+                        <td>@line.ProductName</td>
+                        <td>@line.Sku</td>
+                        <td>@line.Quantity</td>
+                        <td>@ShopFormat.Money(line.Price)</td>
+                        <td>@ShopFormat.Money(line.LineTotal)</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            <div>جمع: @ShopFormat.Money(order.Subtotal)</div>
+            <div>تخفیف: @ShopFormat.Money(order.DiscountAmount)</div>
+            <div>ارسال: @ShopFormat.Money(order.ShippingAmount)</div>
+            <div class="price">نهایی: @ShopFormat.Money(order.TotalAmount)</div>
+            @if (!string.IsNullOrWhiteSpace(order.Note))
+            {
+                <p class="mt-2">یادداشت: @order.Note</p>
+            }
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="panel-card p-3 mb-3">
+            <h2 class="h6">مشتری</h2>
+            <div>@order.CustomerName</div>
+            <div>@order.CustomerEmail</div>
+            <h2 class="h6 mt-3">ارسال</h2>
+            <div>@order.ReceiverName - @order.ReceiverPhone</div>
+            <div>@order.Province، @order.City، @order.Street @order.Plaque</div>
+            <div>کد پستی @order.PostalCode</div>
+            <div>رهگیری: @(order.TrackingCode ?? "ثبت نشده")</div>
+            <div class="mt-2">پرداخت: @ShopFormat.PaymentStatus(order.PaymentStatus)</div>
+        </div>
+        @if (next.Count > 0)
+        {
+            <form class="panel-card p-3" method="post">
+                <label class="form-label">تغییر وضعیت</label>
+                <select class="form-select mb-2" asp-for="Status">
+                    @foreach (var status in next)
+                    {
+                        <option value="@status">@ShopFormat.OrderStatus(status)</option>
+                    }
+                </select>
+                <button class="btn btn-brand w-100" type="submit">ثبت وضعیت</button>
+            </form>
+        }
+    </div>
+</div>

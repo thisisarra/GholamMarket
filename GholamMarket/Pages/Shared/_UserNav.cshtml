@@ -1,0 +1,13 @@
+@{
+    var path = Context.Request.Path.Value ?? "";
+    string Active(string prefix) => path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+}
+<nav class="surface account-nav" aria-label="منوی حساب">
+    <div class="label">حساب کاربری</div>
+    <a class="account-link @Active("/Account/Dashboard")" asp-page="/Account/Dashboard"><i class="bi bi-speedometer2"></i> پیشخوان</a>
+    <a class="account-link @Active("/Account/Profile")" asp-page="/Account/Profile"><i class="bi bi-person"></i> اطلاعات حساب</a>
+    <a class="account-link @Active("/Account/Password")" asp-page="/Account/Password"><i class="bi bi-key"></i> تغییر رمز</a>
+    <a class="account-link @Active("/Account/Addresses")" asp-page="/Account/Addresses"><i class="bi bi-geo-alt"></i> آدرس‌ها</a>
+    <a class="account-link @Active("/Account/Orders")" asp-page="/Account/Orders/Index"><i class="bi bi-receipt"></i> سفارش‌ها</a>
+    <a class="account-link @Active("/Cart")" asp-page="/Cart/Index"><i class="bi bi-bag"></i> سبد خرید</a>
+</nav>

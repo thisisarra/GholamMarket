@@ -1,0 +1,26 @@
+@page
+@model ContactModel
+@{
+    ViewData["Title"] = "تماس با ما";
+}
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="surface p-4 h-100">
+            <h1 class="h4">تماس با غلام‌مارکت</h1>
+            <p><i class="bi bi-envelope"></i> hello@gholam.market</p>
+            <p><i class="bi bi-telephone"></i> ۰۲۱-۹۱۰۰۰۰۰۰</p>
+            <p><i class="bi bi-geo-alt"></i> تهران، خیابان ولیعصر</p>
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <form class="surface p-4" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3"><label class="form-label">نام</label><input class="form-control" asp-for="Name" /><span class="text-danger" asp-validation-for="Name"></span></div>
+            <div class="mb-3"><label class="form-label">ایمیل</label><input class="form-control" asp-for="Email" /><span class="text-danger" asp-validation-for="Email"></span></div>
+            <div class="mb-3"><label class="form-label">پیام</label><textarea class="form-control" asp-for="Message" rows="5"></textarea><span class="text-danger" asp-validation-for="Message"></span></div>
+            <button class="btn btn-brand" type="submit">ارسال پیام</button>
+        </form>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

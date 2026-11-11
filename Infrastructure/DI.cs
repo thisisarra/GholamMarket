@@ -14,6 +14,7 @@ public static class DI
                 .UseSqlServer(configuration.GetConnectionString("GholamDBConnection")));
 
         services.AddNibFrameworkPersistence<GholamContext>();
+        services.AddScoped<Application.Store.IPaymentGateway, Payments.DevelopmentPaymentGateway>();
 
         return services;
     }

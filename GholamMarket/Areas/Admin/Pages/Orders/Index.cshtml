@@ -1,0 +1,49 @@
+@page
+@model GholamMarket.Areas.Admin.Pages.Orders.IndexModel
+@using Domain.Entities.Sales
+@{
+    ViewData["Title"] = "سفارش‌ها";
+    ViewData["PageCount"] = Model.PageData.PageCount;
+}
+
+<h1 class="h3">سفارش‌ها</h1>
+<form class="row g-2 mb-3" method="get">
+    <div class="col-md-3"><input class="form-control" name="orderNumber" value="@Model.OrderNumber" placeholder="شماره سفارش" /></div>
+    <div class="col-md-3"><input class="form-control" name="customer" value="@Model.CustomerName" placeholder="نام مشتری" /></div>
+    <div class="col-md-2">
+        <select class="form-select" name="status">
+            <option value="">همه وضعیت‌ها</option>
+            @foreach (var status in Enum.GetValues<OrderStatus>())
+            {
+                <option value="@((int)status)" selected="@(Model.Status == status)">@ShopFormat.OrderStatus(status)</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-2"><input class="form-control" type="date" name="from" value="@Model.From?.ToString("yyyy-MM-dd")" /></div>
+    <div class="col-md-2"><input class="form-control" type="date" name="to" value="@Model.To?.ToString("yyyy-MM-dd")" /></div>
+    <div class="col-md-2"><button class="btn btn-outline-secondary" type="submit">جستجو</button></div>
+</form>
+<div class="panel-card p-3 table-responsive">
+    <table class="table">
+        <thead><tr><th>شماره</th><th>مشتری</th><th>تاریخ</th><th>مبلغ</th><th>وضعیت</th><th>پرداخت</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var order in Model.PageData.Items)
+        {
+            <tr>
+                <td>@order.OrderNumber</td>
+                <td>@order.CustomerName</td>
+                <td>@ShopFormat.When(order.CreatedAt)</td>
+                <td>@ShopFormat.Money(order.TotalAmount)</td>
+                <td><span class="badge @ShopFormat.Badge(order.Status)">@ShopFormat.OrderStatus(order.Status)</span></td>
+                <td>@ShopFormat.PaymentStatus(order.PaymentStatus)</td>
+                <td><a asp-page="Details" asp-route-id="@order.Id">جزئیات</a></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    @if (Model.PageData.Items.Count == 0)
+    {
+        <div class="empty-state">سفارشی پیدا نشد.</div>
+    }
+    <partial name="_Pager" model="Model.PageData.Page" />
+</div>

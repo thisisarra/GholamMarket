@@ -1,0 +1,68 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "خانه";
+    var icons = new[] { "bi-basket2", "bi-cup-hot", "bi-droplet", "bi-egg", "bi-flower1", "bi-bag" };
+}
+
+<section class="hero mb-4">
+    <div>
+        <h1>خرید روزانه، مستقیم از غلام‌مارکت</h1>
+        <p>برنج، لبنیات و نوشیدنی را با قیمت و موجودی واقعی ببینید، به سبد اضافه کنید و سفارش را تا در خانه پیگیری کنید.</p>
+        <a class="btn btn-accent btn-lg" asp-page="/Products/Index">مشاهده کالاها</a>
+    </div>
+    <div class="hero-points">
+        <div class="hero-point"><strong>ارسال رایگان</strong><span>برای خرید بالای @ShopFormat.Money(ShippingCost.FreeThreshold)</span></div>
+        <div class="hero-point"><strong>موجودی لحظه‌ای</strong><span>فقط کالاهایی که در انبار هستند قابل سفارش‌اند.</span></div>
+        <div class="hero-point"><strong>پیگیری سفارش</strong><span>از پرداخت تا تحویل، وضعیت را در حساب خود ببینید.</span></div>
+    </div>
+</section>
+
+<section>
+    <div class="section-head">
+        <h2>دسته‌بندی‌ها</h2>
+        <a asp-page="/Categories/Index">همه دسته‌ها</a>
+    </div>
+    @if (Model.Home.Categories.Count == 0)
+    {
+        <div class="surface empty-state">دسته‌بندی فعالی برای نمایش وجود ندارد.</div>
+    }
+    else
+    {
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+            @for (var i = 0; i < Model.Home.Categories.Count; i++)
+            {
+                var category = Model.Home.Categories[i];
+                <div class="col">
+                    <a class="category-tile" asp-page="/Products/Index" asp-route-category="@category.Slug">
+                        <i class="bi @icons[i % icons.Length]" aria-hidden="true"></i>
+                        <span>
+                            <strong>@category.Name</strong>
+                            <span>@category.ProductCount کالا</span>
+                        </span>
+                    </a>
+                </div>
+            }
+        </div>
+    }
+</section>
+
+<section>
+    <div class="section-head">
+        <h2>کالاهای تازه</h2>
+        <a asp-page="/Products/Index">مشاهده همه</a>
+    </div>
+    @if (Model.Home.Products.Count == 0)
+    {
+        <div class="surface empty-state"><i class="bi bi-box"></i>هنوز کالایی برای نمایش ثبت نشده است.</div>
+    }
+    else
+    {
+        <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 g-3">
+            @foreach (var product in Model.Home.Products)
+            {
+                <partial name="_ProductCard" model="product" />
+            }
+        </div>
+    }
+</section>

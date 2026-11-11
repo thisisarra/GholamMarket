@@ -1,0 +1,10 @@
+@page
+@model GholamMarket.Pages.Account.AccessDeniedModel
+@{
+    ViewData["Title"] = "دسترسی مجاز نیست";
+}
+<div class="surface empty-state">
+    <h1 class="h4">به این بخش دسترسی ندارید</h1>
+    <p>این صفحه فقط برای مدیر فروشگاه است.</p>
+    <a class="btn btn-brand" asp-page="/Index">بازگشت به فروشگاه</a>
+</div>

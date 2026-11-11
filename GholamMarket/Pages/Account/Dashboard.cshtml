@@ -1,0 +1,31 @@
+@page
+@model GholamMarket.Pages.Account.DashboardModel
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "پیشخوان";
+    var data = Model.Dashboard;
+}
+
+<h1 class="h3">سلام @(data?.FullName ?? "کاربر")</h1>
+@if (data is not null)
+{
+    <div class="row g-3 my-2">
+        <div class="col-md-4"><div class="surface stat-card"><div class="text-secondary">همه سفارش‌ها</div><div class="stat-value">@data.TotalOrders</div></div></div>
+        <div class="col-md-4"><div class="surface stat-card"><div class="text-secondary">در انتظار پرداخت</div><div class="stat-value">@data.PendingPayment</div></div></div>
+        <div class="col-md-4"><div class="surface stat-card"><div class="text-secondary">در حال پردازش</div><div class="stat-value">@data.Processing</div></div></div>
+    </div>
+    <div class="surface p-3">
+        <div class="d-flex justify-content-between mb-3">
+            <h2 class="h5 mb-0">آخرین سفارش‌ها</h2>
+            <a asp-page="/Account/Orders/Index">همه</a>
+        </div>
+        @if (data.RecentOrders.Count == 0)
+        {
+            <div class="empty-state">هنوز سفارشی ثبت نکرده‌اید.</div>
+        }
+        else
+        {
+            <partial name="_OrderTable" model="data.RecentOrders" />
+        }
+    </div>
+}

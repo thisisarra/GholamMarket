@@ -1,0 +1,61 @@
+@page
+@model GholamMarket.Areas.Admin.Pages.Products.IndexModel
+@{
+    ViewData["Title"] = "کالاها";
+    ViewData["PageCount"] = Model.PageData.PageCount;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">کالاها</h1>
+    <a class="btn btn-brand" asp-page="Edit">کالای جدید</a>
+</div>
+<form class="row g-2 mb-3" method="get">
+    <div class="col-md-4"><input class="form-control" name="search" value="@Model.Search" placeholder="نام یا کد کالا" /></div>
+    <div class="col-md-3">
+        <select class="form-select" name="categoryId">
+            <option value="">همه دسته‌ها</option>
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category.Id" selected="@(category.Id == Model.CategoryId)">@category.Name</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select class="form-select" name="active">
+            <option value="">همه وضعیت‌ها</option>
+            <option value="true" selected="@(Model.Active == "true")">فعال</option>
+            <option value="false" selected="@(Model.Active == "false")">غیرفعال</option>
+        </select>
+    </div>
+    <div class="col-md-2"><button class="btn btn-outline-secondary w-100" type="submit">اعمال</button></div>
+</form>
+<div class="panel-card p-3 table-responsive">
+    <table class="table align-middle">
+        <thead><tr><th>نام</th><th>دسته</th><th>قیمت</th><th>موجودی</th><th>وضعیت</th><th>ایجاد</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var product in Model.PageData.Items)
+        {
+            <tr>
+                <td>@product.Name<div class="small text-secondary">@product.Sku</div></td>
+                <td>@product.CategoryName</td>
+                <td>@ShopFormat.Money(product.FinalPrice)</td>
+                <td>@product.Stock</td>
+                <td>@(product.IsActive ? "فعال" : "غیرفعال")</td>
+                <td>@ShopFormat.When(product.CreatedAt)</td>
+                <td class="text-nowrap">
+                    <a asp-page="Edit" asp-route-id="@product.Id">ویرایش</a>
+                    <form class="d-inline" method="post" asp-page-handler="Delete">
+                        <input type="hidden" name="id" value="@product.Id" />
+                        <button class="btn btn-link text-danger p-0" type="submit" data-loading="off">حذف</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    @if (Model.PageData.Items.Count == 0)
+    {
+        <div class="empty-state">کالایی پیدا نشد.</div>
+    }
+    <partial name="_Pager" model="Model.PageData.Page" />
+</div>

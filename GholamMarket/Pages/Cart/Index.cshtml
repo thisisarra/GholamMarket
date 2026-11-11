@@ -1,0 +1,79 @@
+@page
+@model GholamMarket.Pages.Cart.IndexModel
+@{
+    ViewData["Title"] = "سبد خرید";
+}
+
+<div class="page-head">
+    <h1>سبد خرید</h1>
+    <p>@(Model.Cart.Lines.Count == 0 ? "سبد شما خالی است." : $"{Model.Cart.ItemCount} کالا در سبد")</p>
+</div>
+@if (User.Identity?.IsAuthenticated != true)
+{
+    <div class="alert alert-info store-alert">برای ذخیره سبد و ادامه خرید <a asp-page="/Account/Login" asp-route-returnUrl="/Cart">وارد شوید</a>.</div>
+}
+@if (Model.Cart.Lines.Count == 0)
+{
+    <div class="surface empty-state">
+        <i class="bi bi-bag"></i>
+        سبد خرید خالی است.
+        <div class="mt-3"><a class="btn btn-brand" asp-page="/Products/Index">ادامه خرید</a></div>
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="surface px-3">
+                @foreach (var line in Model.Cart.Lines)
+                {
+                    var ready = line.IsActive && line.Stock >= line.Quantity;
+                    <article class="cart-line">
+                        <a class="cart-thumb" asp-page="/Products/Details" asp-route-slug="@line.Slug" aria-label="@line.Name">
+                            @if (string.IsNullOrWhiteSpace(line.ImageUrl))
+                            {
+                                <span class="media-fallback" aria-hidden="true"><i class="bi bi-image"></i></span>
+                            }
+                            else
+                            {
+                                <img data-product-image src="@line.ImageUrl" alt="" />
+                            }
+                        </a>
+                        <div>
+                            <a class="fw-bold" asp-page="/Products/Details" asp-route-slug="@line.Slug">@line.Name</a>
+                            <div class="product-price">
+                                <span>@ShopFormat.Money(line.UnitPrice)</span>
+                                @if (line.ListPrice != line.UnitPrice)
+                                {
+                                    <span class="old-price">@ShopFormat.Money(line.ListPrice)</span>
+                                }
+                            </div>
+                            <div class="stock @(ready ? "in" : "out")">@(ready ? "آماده سفارش" : "موجودی یا وضعیت کالا نیاز به بررسی دارد")</div>
+                            <form method="post" asp-page-handler="Update" class="qty-form mt-2">
+                                <input type="hidden" name="productId" value="@line.ProductId" />
+                                <input class="form-control" type="number" name="quantity" min="1" max="@Math.Max(line.Stock, 1)" value="@line.Quantity" aria-label="تعداد @line.Name" />
+                                <button class="btn btn-outline-brand btn-sm" type="submit">به‌روزرسانی</button>
+                            </form>
+                        </div>
+                        <div class="text-start">
+                            <div class="price mb-2">@ShopFormat.Money(line.LineTotal)</div>
+                            <form method="post" asp-page-handler="Remove">
+                                <input type="hidden" name="productId" value="@line.ProductId" />
+                                <button class="btn btn-link text-danger p-0" type="submit" data-loading="off" aria-label="حذف @line.Name"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </div>
+                    </article>
+                }
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <aside class="surface summary-card">
+                <h2 class="h6">خلاصه سفارش</h2>
+                <div class="summary-row"><span>جمع جزء</span><strong>@ShopFormat.Money(Model.Cart.Subtotal)</strong></div>
+                <p class="small text-secondary">ارسال برای خرید بالای @ShopFormat.Money(ShippingCost.FreeThreshold) رایگان است.</p>
+                <a class="btn btn-brand w-100" asp-page="/Checkout/Index">ادامه تسویه حساب</a>
+                <a class="btn btn-outline-brand w-100 mt-2" asp-page="/Products/Index">ادامه خرید</a>
+            </aside>
+        </div>
+    </div>
+}

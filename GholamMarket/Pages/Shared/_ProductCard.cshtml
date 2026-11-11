@@ -1,0 +1,46 @@
+@model ProductCardDto
+@{
+    var available = Model.Stock > 0;
+    var discounted = Model.DiscountPercent is > 0;
+}
+<div class="col">
+    <article class="product-card">
+        <a class="product-media" asp-page="/Products/Details" asp-route-slug="@Model.Slug">
+            @if (string.IsNullOrWhiteSpace(Model.ImageUrl))
+            {
+                <span class="media-fallback" aria-hidden="true"><i class="bi bi-image"></i></span>
+            }
+            else
+            {
+                <img data-product-image src="@Model.ImageUrl" alt="@Model.Name" loading="lazy" />
+            }
+            @if (discounted)
+            {
+                <span class="discount-badge">@Model.DiscountPercent?.ToString("0", System.Globalization.CultureInfo.GetCultureInfo("fa-IR"))٪</span>
+            }
+        </a>
+        <div class="product-body">
+            <p class="product-category">@Model.CategoryName</p>
+            <h2 class="product-title">
+                <a asp-page="/Products/Details" asp-route-slug="@Model.Slug">@Model.Name</a>
+            </h2>
+            <div class="product-price">
+                <span class="price">@ShopFormat.Money(Model.FinalPrice)</span>
+                @if (discounted)
+                {
+                    <span class="old-price">@ShopFormat.Money(Model.Price)</span>
+                }
+            </div>
+            <p class="stock @(available ? "in" : "out")">@(available ? $"موجودی {Model.Stock}" : "ناموجود")</p>
+            <div class="product-actions">
+                <a class="btn btn-outline-brand btn-sm" asp-page="/Products/Details" asp-route-slug="@Model.Slug">مشاهده</a>
+                <form method="post" asp-page="/Products/Details" asp-route-slug="@Model.Slug">
+                    <input type="hidden" name="Quantity" value="1" />
+                    <button class="btn btn-brand btn-sm" type="submit" @(available ? null : "disabled")>
+                        <i class="bi bi-bag-plus"></i> افزودن
+                    </button>
+                </form>
+            </div>
+        </div>
+    </article>
+</div>

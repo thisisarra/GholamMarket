@@ -4,7 +4,27 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Visual Studio otherwise skips MSBuild and launches the previous executable. -->
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
   </PropertyGroup>
+
+  <!--
+    GholamMarket.exe locks its own file while it is running. The next build then
+    cannot replace that file, and the old process keeps listening on the
+    launchSettings port, so the browser still shows the previous build.
+    Stop that process before CoreBuild copies outputs. BeforeTargets="Build" is too
+    late: the copy is a dependency of Build and has already failed by then.
+    A failed build therefore leaves nothing serving, and dotnet run starts a
+    process only after the build succeeds.
+    Design-time builds are skipped. Set GholamMarketSkipProcessStop=true to bypass.
+  -->
+  <Target Name="StopStaleGholamMarket"
+          BeforeTargets="BeforeBuild"
+          Condition="'$(DesignTimeBuild)' != 'true' AND '$(DesignTimeSilentBuild)' != 'true' AND '$(BuildingForLiveUnitTesting)' != 'true' AND '$(GholamMarketSkipProcessStop)' != 'true' AND '$(OS)' == 'Windows_NT'">
+    <Message Importance="high" Text="Stopping any running GholamMarket instance before build." />
+    <Exec WorkingDirectory="$(MSBuildProjectDirectory)"
+          Command="powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\..\scripts\Stop-GholamMarket.ps1&quot; -ProjectDirectory &quot;$(MSBuildProjectDirectory)&quot;" />
+  </Target>
 
   <ItemGroup>
     <Folder Include="Controllers\" />
@@ -14,6 +34,14 @@
     <ProjectReference Include="..\..\NibFramework\NibFramework\NibFramework.csproj" />
     <ProjectReference Include="..\..\NibFramework\Raya.Auth\Raya.Auth.csproj" />
     <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
+	   <ItemGroup>
+	   <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.11"/>
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.11"/>	
+	   <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.6" />
+	   <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.6" />
+	</ItemGroup>
+	
 </Project>

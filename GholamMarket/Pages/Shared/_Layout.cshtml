@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@(ViewData["Title"] is string title && title.Length > 0 ? $"{title} | غلام‌مارکت" : "غلام‌مارکت")</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" />
+    <link rel="stylesheet" href="~/css/store.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="topbar">
+        <div class="container">
+            <span><i class="bi bi-truck"></i> ارسال رایگان برای خرید بالای @ShopFormat.Money(ShippingCost.FreeThreshold)</span>
+            <div class="topbar-links">
+                <a asp-page="/About">درباره ما</a>
+                <a asp-page="/Contact">تماس با ما</a>
+            </div>
+        </div>
+    </div>
+
+    <header class="store-header">
+        <div class="container header-bar">
+            <button class="nav-toggle d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileNav" aria-controls="mobileNav" aria-label="باز کردن منو">
+                <i class="bi bi-list"></i>
+            </button>
+            <a class="brand" asp-page="/Index">
+                <span class="brand-logo" aria-hidden="true"><i class="bi bi-shop"></i></span>
+                <span>
+                    <strong>غلام‌مارکت</strong>
+                    <small>بازار تازه مواد غذایی</small>
+                </span>
+            </a>
+            <form class="search-form" method="get" asp-page="/Products/Index" role="search">
+                <i class="bi bi-search" aria-hidden="true"></i>
+                <input type="search" name="search" value="@ViewContext.HttpContext.Request.Query["search"]" placeholder="نام کالا، برند یا دسته‌بندی..." aria-label="جستجوی کالا" />
+                <button class="btn btn-brand" type="submit">جستجو</button>
+            </form>
+            <div class="header-actions">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <div class="dropdown">
+                        <button class="action-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person"></i>
+                            <span class="action-label">حساب من</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" asp-page="/Account/Dashboard">پیشخوان</a></li>
+                            <li><a class="dropdown-item" asp-page="/Account/Orders/Index">سفارش‌ها</a></li>
+                            <li><a class="dropdown-item" asp-page="/Account/Profile">اطلاعات حساب</a></li>
+                            @if (User.IsInRole("ADMIN"))
+                            {
+                                <li><a class="dropdown-item" asp-area="Admin" asp-page="/Index">مدیریت فروشگاه</a></li>
+                            }
+                            <li><hr class="dropdown-divider" /></li>
+                            <li>
+                                <form method="post" asp-page="/Account/Logout">
+                                    <button class="dropdown-item" type="submit" data-loading="off">خروج</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <a class="action-link" asp-page="/Account/Login">
+                        <i class="bi bi-box-arrow-in-left"></i>
+                        <span class="action-label">ورود</span>
+                    </a>
+                    <a class="action-link d-none d-sm-inline-flex" asp-page="/Account/Register">
+                        <i class="bi bi-person-plus"></i>
+                        <span class="action-label">ثبت‌نام</span>
+                    </a>
+                }
+                <a class="action-link cart-link" asp-page="/Cart/Index" aria-label="سبد خرید">
+                    <i class="bi bi-bag"></i>
+                    <span class="action-label">سبد</span>
+                    @await Component.InvokeAsync("CartCount")
+                </a>
+            </div>
+        </div>
+        <nav class="nav-strip d-none d-lg-block" aria-label="منوی اصلی">
+            <div class="container">
+                <a asp-page="/Products/Index"><i class="bi bi-grid"></i> همه کالاها</a>
+                <a asp-page="/Categories/Index"><i class="bi bi-bookmark"></i> دسته‌بندی‌ها</a>
+                <a asp-page="/Cart/Index"><i class="bi bi-bag"></i> سبد خرید</a>
+                <a asp-page="/Account/Orders/Index"><i class="bi bi-receipt"></i> پیگیری سفارش</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="offcanvas offcanvas-start mobile-nav" tabindex="-1" id="mobileNav" aria-labelledby="mobileNavLabel">
+        <div class="offcanvas-header">
+            <h2 class="offcanvas-title h5" id="mobileNavLabel">غلام‌مارکت</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="بستن"></button>
+        </div>
+        <div class="offcanvas-body">
+            <a class="nav-link" asp-page="/Index">خانه</a>
+            <a class="nav-link" asp-page="/Products/Index">کالاها</a>
+            <a class="nav-link" asp-page="/Categories/Index">دسته‌بندی‌ها</a>
+            <a class="nav-link" asp-page="/Cart/Index">سبد خرید</a>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a class="nav-link" asp-page="/Account/Dashboard">حساب من</a>
+                <a class="nav-link" asp-page="/Account/Orders/Index">سفارش‌ها</a>
+                @if (User.IsInRole("ADMIN"))
+                {
+                    <a class="nav-link" asp-area="Admin" asp-page="/Index">مدیریت</a>
+                }
+                <form method="post" asp-page="/Account/Logout" class="mt-3">
+                    <button class="btn btn-outline-brand w-100" type="submit" data-loading="off">خروج</button>
+                </form>
+            }
+            else
+            {
+                <a class="nav-link" asp-page="/Account/Login">ورود</a>
+                <a class="nav-link" asp-page="/Account/Register">ثبت‌نام</a>
+            }
+        </div>
+    </div>
+
+    <main class="store-main">
+        <div class="container">
+            <partial name="_Alerts" />
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="store-footer">
+        <div class="container py-4">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="footer-brand">
+                        <span class="brand-logo" aria-hidden="true"><i class="bi bi-shop"></i></span>
+                        <div>
+                            <strong>غلام‌مارکت</strong>
+                            <p class="mb-0 small">فروشگاه مواد غذایی با سفارش، پرداخت و پیگیری آنلاین.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <h2>فروشگاه</h2>
+                    <ul>
+                        <li><a asp-page="/Products/Index">کالاها</a></li>
+                        <li><a asp-page="/Categories/Index">دسته‌ها</a></li>
+                        <li><a asp-page="/Cart/Index">سبد خرید</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md-3">
+                    <h2>حساب کاربری</h2>
+                    <ul>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li><a asp-page="/Account/Dashboard">پیشخوان</a></li>
+                            <li><a asp-page="/Account/Profile">اطلاعات حساب</a></li>
+                            <li><a asp-page="/Account/Orders/Index">سفارش‌ها</a></li>
+                        }
+                        else
+                        {
+                            <li><a asp-page="/Account/Login">ورود</a></li>
+                            <li><a asp-page="/Account/Register">ثبت‌نام</a></li>
+                            <li><a asp-page="/Account/Orders/Index">سفارش‌ها</a></li>
+                        }
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h2>ارتباط</h2>
+                    <ul>
+                        <li><a asp-page="/About">درباره ما</a></li>
+                        <li><a asp-page="/Contact">تماس با ما</a></li>
+                        <li>hello@gholam.market</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container py-3">غلام‌مارکت — خرید روزمره، با قیمت و موجودی واقعی.</div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

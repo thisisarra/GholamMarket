@@ -1,0 +1,60 @@
+@page
+@model GholamMarket.Areas.Admin.Pages.Categories.IndexModel
+@{
+    ViewData["Title"] = "دسته‌بندی‌ها";
+}
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <form class="panel-card p-3" method="post">
+            <h1 class="h5">@(Model.Input.Id is null ? "دسته جدید" : "ویرایش دسته")</h1>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Input.Id" />
+            <div class="mb-2"><label class="form-label">نام</label><input class="form-control" asp-for="Input.Name" /></div>
+            <div class="mb-2"><label class="form-label">نامک</label><input class="form-control" asp-for="Input.Slug" /></div>
+            <div class="mb-2"><label class="form-label">توضیح</label><textarea class="form-control" asp-for="Input.Description"></textarea></div>
+            <div class="mb-2"><label class="form-label">ترتیب</label><input class="form-control" asp-for="Input.DisplayOrder" /></div>
+            <div class="mb-2">
+                <label class="form-label">دسته والد</label>
+                <select class="form-select" asp-for="Input.ParentId">
+                    <option value="">بدون والد</option>
+                    @foreach (var category in Model.Categories.Where(c => c.Id != Model.Input.Id))
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" asp-for="Input.IsActive" />
+                <label class="form-check-label">فعال</label>
+            </div>
+            <button class="btn btn-brand" type="submit">ذخیره</button>
+        </form>
+    </div>
+    <div class="col-lg-8">
+        <div class="panel-card p-3 table-responsive">
+            <table class="table">
+                <thead><tr><th>نام</th><th>والد</th><th>کالا</th><th>وضعیت</th><th></th></tr></thead>
+                <tbody>
+                @foreach (var category in Model.Categories)
+                {
+                    <tr>
+                        <td>@category.Name<div class="small text-secondary">@category.Slug</div></td>
+                        <td>@(category.ParentName ?? "—")</td>
+                        <td>@category.ProductCount</td>
+                        <td>@(category.IsActive ? "فعال" : "غیرفعال")</td>
+                        <td>
+                            <a asp-page="/Categories/Index" asp-route-id="@category.Id">ویرایش</a>
+                            <form class="d-inline" method="post" asp-page-handler="Delete">
+                                <input type="hidden" name="id" value="@category.Id" />
+                                <button class="btn btn-link text-danger p-0" type="submit" data-loading="off">حذف</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

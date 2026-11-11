@@ -1,0 +1,47 @@
+:root {
+    --ink: #1c1915;
+    --brand: #0c7a4b;
+    --brand-dark: #085c38;
+    --line: #e6e9ee;
+    --card: #fff;
+}
+
+body {
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    background: #f4f6f8;
+    color: var(--ink);
+    min-height: 100vh;
+}
+
+.admin-shell { min-height: 100vh; }
+.admin-side {
+    background: #10261c;
+    color: #fff;
+    min-height: 100vh;
+}
+.admin-side a {
+    color: #d9efe6;
+    text-decoration: none;
+    display: block;
+    border-radius: .7rem;
+    padding: .55rem .7rem;
+    margin-bottom: .15rem;
+}
+.admin-side a:hover,
+.admin-side a.active { color: #fff; background: rgba(255,255,255,.08); }
+.brand-mark { font-weight: 800; color: #fff; text-decoration: none; }
+
+.panel-card,
+.stat-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+}
+.btn-brand { background: var(--brand); border-color: var(--brand); color: #fff; }
+.btn-brand:hover { background: var(--brand-dark); color: #fff; }
+.empty-state { padding: 2rem 1rem; text-align: center; color: #6d655c; }
+.stat-value { font-size: 1.6rem; font-weight: 800; }
+.table { --bs-table-bg: transparent; }
+.form-control, .form-select { border-color: var(--line); }
+.price { font-weight: 800; }
+.old-price { color: #8a8175; text-decoration: line-through; }

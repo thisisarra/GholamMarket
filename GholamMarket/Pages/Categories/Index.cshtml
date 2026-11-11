@@ -1,0 +1,33 @@
+@page
+@model CategoriesModel
+@{
+    ViewData["Title"] = "دسته‌بندی‌ها";
+    var icons = new[] { "bi-basket2", "bi-cup-hot", "bi-droplet", "bi-egg", "bi-flower1", "bi-bag" };
+}
+
+<div class="page-head">
+    <h1>دسته‌بندی‌ها</h1>
+    <p>کالاها را بر اساس دسته ببینید.</p>
+</div>
+@if (Model.Categories.Count == 0)
+{
+    <div class="surface empty-state"><i class="bi bi-grid"></i>دسته‌بندی فعالی وجود ندارد.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+        @for (var i = 0; i < Model.Categories.Count; i++)
+        {
+            var category = Model.Categories[i];
+            <div class="col">
+                <a class="category-tile" asp-page="/Products/Index" asp-route-category="@category.Slug">
+                    <i class="bi @icons[i % icons.Length]" aria-hidden="true"></i>
+                    <span>
+                        <strong>@category.Name</strong>
+                        <span>@category.ProductCount کالا</span>
+                    </span>
+                </a>
+            </div>
+        }
+    </div>
+}

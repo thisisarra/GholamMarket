@@ -1,0 +1,70 @@
+@page
+@model GholamMarket.Pages.Account.AddressesModel
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "آدرس‌ها";
+}
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <form class="surface p-3" method="post">
+            <h1 class="h5">@(Model.Input.Id is null ? "آدرس جدید" : "ویرایش آدرس")</h1>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Input.Id" />
+            <div class="mb-2"><label class="form-label">عنوان</label><input class="form-control" asp-for="Input.Title" /><span class="text-danger" asp-validation-for="Input.Title"></span></div>
+            <div class="mb-2"><label class="form-label">گیرنده</label><input class="form-control" asp-for="Input.ReceiverName" /><span class="text-danger" asp-validation-for="Input.ReceiverName"></span></div>
+            <div class="mb-2"><label class="form-label">موبایل</label><input class="form-control" asp-for="Input.ReceiverPhone" /><span class="text-danger" asp-validation-for="Input.ReceiverPhone"></span></div>
+            <div class="row">
+                <div class="col-6 mb-2"><label class="form-label">استان</label><input class="form-control" asp-for="Input.Province" /></div>
+                <div class="col-6 mb-2"><label class="form-label">شهر</label><input class="form-control" asp-for="Input.City" /></div>
+            </div>
+            <div class="mb-2"><label class="form-label">نشانی</label><textarea class="form-control" asp-for="Input.Street"></textarea></div>
+            <div class="row">
+                <div class="col-4 mb-2"><label class="form-label">پلاک</label><input class="form-control" asp-for="Input.Plaque" /></div>
+                <div class="col-4 mb-2"><label class="form-label">واحد</label><input class="form-control" asp-for="Input.Unit" /></div>
+                <div class="col-4 mb-2"><label class="form-label">کد پستی</label><input class="form-control" asp-for="Input.PostalCode" /></div>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" asp-for="Input.IsDefault" />
+                <label class="form-check-label" asp-for="Input.IsDefault">آدرس پیش‌فرض</label>
+            </div>
+            <button class="btn btn-brand" type="submit">ذخیره آدرس</button>
+        </form>
+    </div>
+    <div class="col-lg-7">
+        @if (Model.Addresses.Count == 0)
+        {
+            <div class="surface empty-state">آدرسی ذخیره نشده است.</div>
+        }
+        @foreach (var address in Model.Addresses)
+        {
+            <article class="surface p-3 mb-3">
+                <div class="d-flex justify-content-between">
+                    <strong>@address.Title</strong>
+                    @if (address.IsDefault)
+                    {
+                        <span class="badge text-bg-success">پیش‌فرض</span>
+                    }
+                </div>
+                <div>@address.ReceiverName - @address.ReceiverPhone</div>
+                <div>@address.Province، @address.City، @address.Street @address.Plaque</div>
+                <div class="small text-secondary">کد پستی @address.PostalCode</div>
+                <div class="mt-2 d-flex gap-2">
+                    <a class="btn btn-sm btn-outline-secondary" asp-page="/Account/Addresses" asp-route-id="@address.Id">ویرایش</a>
+                    @if (!address.IsDefault)
+                    {
+                        <form method="post" asp-page-handler="Default">
+                            <input type="hidden" name="id" value="@address.Id" />
+                            <button class="btn btn-sm btn-outline-success" type="submit" data-loading="off">انتخاب پیش‌فرض</button>
+                        </form>
+                    }
+                    <form method="post" asp-page-handler="Delete">
+                        <input type="hidden" name="id" value="@address.Id" />
+                        <button class="btn btn-sm btn-outline-danger" type="submit" data-loading="off">حذف</button>
+                    </form>
+                </div>
+            </article>
+        }
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
